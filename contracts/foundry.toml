@@ -1,0 +1,27 @@
+# foundry.toml - Complete Configuration for DeFi Lending Protocol
+
+[profile.default]
+# Source and output directories
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+script = "script"
+cache_path = "cache"
+broadcast = "broadcast"
+
+
+
+# Remappings for imports
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/",
+    "@chainlink/=lib/chainlink-brownie-contracts/",
+    "forge-std/=lib/forge-std/src/",
+    "ds-test/=lib/forge-std/lib/ds-test/src/",
+    "@src/=src/",
+    "@test/=test/",
+    "@script/=script/"
+]
+

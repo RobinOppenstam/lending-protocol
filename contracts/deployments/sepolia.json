@@ -1,0 +1,79 @@
+{
+  "network": {
+    "name": "Sepolia Testnet",
+    "chainId": 11155111,
+    "rpcUrl": "https://eth-sepolia.g.alchemy.com/v2/cF8u9YTZ66Uk2bwSln6sw"
+  },
+  "deployer": "0x7FC771b0675dE44c4ee9E8b40b24B7a4eE2804BC",
+  "deploymentDate": "2025-08-03",
+  "contracts": {
+    "InterestRateModel": {
+      "address": "0xA7Bc577F2e1fF05bc79eAaEd8c907a548b9d70b6",
+      "verified": true,
+      "etherscan": "https://sepolia.etherscan.io/address/0xA7Bc577F2e1fF05bc79eAaEd8c907a548b9d70b6"
+    },
+    "PriceOracle": {
+      "address": "0x313ED33288c24768Db927Cfb7Af0304149f426Ff",
+      "verified": true,
+      "etherscan": "https://sepolia.etherscan.io/address/0x313ED33288c24768Db927Cfb7Af0304149f426Ff"
+    },
+    "Comptroller": {
+      "address": "0x0b1C31213d3181Fd9b9fd159288F84adB2825e97",
+      "verified": true,
+      "etherscan": "https://sepolia.etherscan.io/address/0x0b1C31213d3181Fd9b9fd159288F84adB2825e97"
+    },
+    "lUSDC": {
+      "address": "0xbAc6bF46B37490ac71f31735E9dA3752c5664036",
+      "verified": false,
+      "etherscan": "https://sepolia.etherscan.io/address/0xbAc6bF46B37490ac71f31735E9dA3752c5664036",
+      "underlying": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      "symbol": "lUSDC",
+      "name": "Lending USDC",
+      "collateralFactor": "0.8",
+      "decimals": 18
+    },
+    "lETH": {
+      "address": "0xFAf79f14f3418d61516a25CE61AF4e4b737CF7B8",
+      "verified": false,
+      "etherscan": "https://sepolia.etherscan.io/address/0xFAf79f14f3418d61516a25CE61AF4e4b737CF7B8",
+      "underlying": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+      "symbol": "lETH",
+      "name": "Lending ETH",
+      "collateralFactor": "0.75",
+      "decimals": 18
+    }
+  },
+  "underlyingAssets": {
+    "USDC": {
+      "address": "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8",
+      "symbol": "USDC",
+      "decimals": 6,
+      "oraclePrice": "1000000000000"
+    },
+    "WETH": {
+      "address": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+      "symbol": "WETH",  
+      "decimals": 18,
+      "oraclePrice": "2000"
+    }
+  },
+  "configuration": {
+    "interestRateModel": {
+      "baseRatePerYear": "0.02",
+      "multiplierPerYear": "0.10",
+      "jumpMultiplierPerYear": "0.50",
+      "kink": "0.80"
+    },
+    "liquidation": {
+      "closeFactor": "0.50",
+      "liquidationIncentive": "0.08"
+    }
+  },
+  "status": {
+    "deployed": true,
+    "tested": true,
+    "testsPass": "20/20",
+    "verified": "3/5 contracts",
+    "ready": true
+  }
+}

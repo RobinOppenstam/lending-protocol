@@ -1,0 +1,53 @@
+{
+  "network": "sepolia",
+  "deployedAt": "2025-08-03",
+  "contracts": {
+    "InterestRateModel": {
+      "address": "0xA7Bc577F2e1fF05bc79eAaEd8c907a548b9d70b6",
+      "verified": true
+    },
+    "PriceOracle": {
+      "address": "0x313ED33288c24768Db927Cfb7Af0304149f426Ff",
+      "verified": true
+    },
+    "Comptroller": {
+      "address": "0x0b1C31213d3181Fd9b9fd159288F84adB2825e97",
+      "verified": true
+    },
+    "lUSDC": {
+      "address": "0xbAc6bF46B37490ac71f31735E9dA3752c5664036",
+      "verified": false,
+      "note": "Verification pending"
+    },
+    "lETH": {
+      "address": "0xFAf79f14f3418d61516a25CE61AF4e4b737CF7B8",
+      "verified": false,
+      "note": "Verification pending"
+    }
+  },
+  "configuration": {
+    "interestRateModel": {
+      "baseRate": "2%",
+      "multiplier": "10%",
+      "jumpMultiplier": "50%",
+      "kink": "80%",
+      "note": "Fixed parameters to prevent rate explosion"
+    },
+    "collateralFactors": {
+      "USDC": "80%",
+      "ETH": "75%"
+    },
+    "oraclePrices": {
+      "lUSDC": "1e12",
+      "lETH": "2000",
+      "note": "Corrected decimal scaling"
+    }
+  },
+  "fixes": [
+    "Interest rate explosion bug fixed",
+    "Decimal scaling corrected for multi-decimal tokens",
+    "Auto market entry implemented",
+    "Liquidation logic improved",
+    "Exchange rate caps implemented"
+  ]
+}
