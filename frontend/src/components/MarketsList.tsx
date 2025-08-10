@@ -17,29 +17,29 @@ export function MarketsList({ onAction }: MarketsListProps) {
   const [selectedTab, setSelectedTab] = useState<'overview' | 'supply' | 'borrow'>('overview');
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl card-shadow">
+    <div className="bg-card rounded-xl card-shadow">
       {/* Header */}
-      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+      <div className="p-6 border-b border-border">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
           <div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-xl font-semibold text-card-foreground">
               Markets
             </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Supply assets to earn interest or borrow against your collateral
             </p>
           </div>
           
           {/* Tab Navigation */}
-          <div className="flex bg-slate-100 dark:bg-slate-700 rounded-lg p-1">
+          <div className="flex bg-secondary rounded-lg p-1">
             {(['overview', 'supply', 'borrow'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setSelectedTab(tab)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   selectedTab === tab
-                    ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                    ? 'bg-white dark:bg-slate-600 text-card-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-slate-900 dark:hover:text-slate-100'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -91,13 +91,13 @@ export function MarketsList({ onAction }: MarketsListProps) {
       </div>
 
       {/* Market Summary */}
-      <div className="p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
+      <div className="p-6 border-t border-border bg-slate-50 dark:bg-slate-700/50">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">
               {markets.length}
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Markets Available
             </div>
           </div>
@@ -105,7 +105,7 @@ export function MarketsList({ onAction }: MarketsListProps) {
             <div className="text-2xl font-bold text-green-600">
               0-15%
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Supply APY Range
             </div>
           </div>
@@ -113,7 +113,7 @@ export function MarketsList({ onAction }: MarketsListProps) {
             <div className="text-2xl font-bold text-purple-600">
               75-80%
             </div>
-            <div className="text-sm text-slate-600 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Max Collateral Factor
             </div>
           </div>
@@ -143,7 +143,7 @@ function MarketRow({ market, onAction, selectedTab }: MarketRowProps) {
 
   return (
     <tr 
-      className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+      className="hover:bg-accent/50 transition-colors"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -158,7 +158,7 @@ function MarketRow({ market, onAction, selectedTab }: MarketRowProps) {
             className="rounded-full"
           />
           <div>
-            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+            <div className="text-sm font-medium text-card-foreground">
               {market.name}
             </div>
             <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -179,7 +179,7 @@ function MarketRow({ market, onAction, selectedTab }: MarketRowProps) {
 
       {/* Total Supply */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+        <div className="text-sm font-medium text-card-foreground">
           {formatNumber(marketData.liquidity, { compact: true })}
         </div>
         <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -202,7 +202,7 @@ function MarketRow({ market, onAction, selectedTab }: MarketRowProps) {
 
       {/* Total Borrow */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+        <div className="text-sm font-medium text-card-foreground">
           {formatNumber(Number(marketData.totalBorrows) / (10 ** market.decimals), { compact: true })}
         </div>
         <div className="text-sm text-slate-500 dark:text-slate-400">
@@ -225,7 +225,7 @@ function MarketRow({ market, onAction, selectedTab }: MarketRowProps) {
 
       {/* Liquidity */}
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+        <div className="text-sm font-medium text-card-foreground">
           {formatUSD(marketData.liquidity * marketData.price)}
         </div>
         <div className="flex items-center space-x-1">
@@ -326,7 +326,7 @@ function MarketRowError({ market }: { market: Market }) {
             className="rounded-full"
           />
           <div>
-            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+            <div className="text-sm font-medium text-card-foreground">
               {market.name}
             </div>
             <div className="text-sm text-red-500">
@@ -345,7 +345,7 @@ function MarketRowError({ market }: { market: Market }) {
       <td className="px-6 py-4 whitespace-nowrap text-right">
         <button 
           disabled
-          className="px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-lg cursor-not-allowed"
+          className="px-3 py-1.5 text-xs font-medium text-slate-400 bg-secondary rounded-lg cursor-not-allowed"
         >
           Unavailable
         </button>

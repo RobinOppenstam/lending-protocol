@@ -23,7 +23,7 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 dark:bg-slate-900/80 dark:border-slate-700">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-border dark:bg-background/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
@@ -36,7 +36,7 @@ export function Header() {
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   DeFi Lending
                 </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   Sepolia Testnet
                 </p>
               </div>
@@ -50,7 +50,7 @@ export function Header() {
               className={`flex items-center space-x-2 transition-colors font-medium ${
                 isActivePath('/') 
                   ? 'text-blue-600 dark:text-blue-400' 
-                  : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                  : 'text-foreground/80 hover:text-blue-600'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -61,7 +61,7 @@ export function Header() {
               className={`transition-colors font-medium ${
                 isActivePath('/dashboard') 
                   ? 'text-blue-600 dark:text-blue-400' 
-                  : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                  : 'text-foreground/80 hover:text-blue-600'
               }`}
             >
               Dashboard
@@ -71,7 +71,7 @@ export function Header() {
               className={`transition-colors font-medium ${
                 isActivePath('/markets') 
                   ? 'text-blue-600 dark:text-blue-400' 
-                  : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                  : 'text-foreground/80 hover:text-blue-600'
               }`}
             >
               Markets
@@ -81,7 +81,7 @@ export function Header() {
               className={`transition-colors font-medium ${
                 isActivePath('/analytics') 
                   ? 'text-blue-600 dark:text-blue-400' 
-                  : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                  : 'text-foreground/80 hover:text-blue-600'
               }`}
             >
               Analytics
@@ -104,7 +104,7 @@ export function Header() {
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              className="md:hidden p-2 text-muted-foreground hover:text-foreground"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -113,10 +113,10 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-700">
+          <div className="md:hidden py-4 border-t border-border">
             {/* Mobile Theme Toggle */}
             <div className="flex items-center justify-between mb-4 px-2">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Theme</span>
+              <span className="text-sm font-medium text-foreground/80">Theme</span>
               <ThemeToggle />
             </div>
             <nav className="flex flex-col space-y-3">
@@ -125,7 +125,7 @@ export function Header() {
                 className={`flex items-center space-x-2 transition-colors font-medium px-2 py-1 ${
                   isActivePath('/') 
                     ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                    : 'text-foreground/80 hover:text-blue-600'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -137,7 +137,7 @@ export function Header() {
                 className={`transition-colors font-medium px-2 py-1 ${
                   isActivePath('/dashboard') 
                     ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                    : 'text-foreground/80 hover:text-blue-600'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -148,7 +148,7 @@ export function Header() {
                 className={`transition-colors font-medium px-2 py-1 ${
                   isActivePath('/markets') 
                     ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                    : 'text-foreground/80 hover:text-blue-600'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -159,7 +159,7 @@ export function Header() {
                 className={`transition-colors font-medium px-2 py-1 ${
                   isActivePath('/analytics') 
                     ? 'text-blue-600 dark:text-blue-400' 
-                    : 'text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
+                    : 'text-foreground/80 hover:text-blue-600'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >

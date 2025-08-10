@@ -520,12 +520,12 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
   });
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow sticky top-24">
+    <div className="bg-card rounded-xl p-6 card-shadow sticky top-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
           {getActionIcon()}
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 capitalize">
+          <h3 className="text-lg font-semibold text-card-foreground capitalize">
             {action} {market.underlyingSymbol}
           </h3>
         </div>
@@ -558,7 +558,7 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
                 className={`p-3 text-sm font-medium rounded-lg border transition-colors ${
                   action === actionType
                     ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
-                    : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-500'
+                    : 'border-slate-200 dark:border-slate-600 text-muted-foreground hover:border-slate-300 dark:hover:border-slate-500'
                 }`}
               >
                 <div className="flex items-center justify-center space-x-2">
@@ -603,10 +603,10 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
                     className="rounded-full"
                   />
                   <div>
-                    <div className="font-medium text-slate-900 dark:text-slate-100">
+                    <div className="font-medium text-card-foreground">
                       {marketOption.name}
                     </div>
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
+                    <div className="text-sm text-muted-foreground">
                       {marketOption.underlyingSymbol}
                     </div>
                   </div>
@@ -622,7 +622,7 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
             <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Amount
             </label>
-            <div className="text-sm text-slate-500 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Balance: {formatTokenAmount(
                 tokenBalance?.value || BigInt(0),
                 tokenBalance?.decimals || 18,
@@ -637,7 +637,7 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full px-4 py-3 pr-20 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-slate-100"
+              className="w-full px-4 py-3 pr-20 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:text-slate-100"
             />
             <button
               type="button"
@@ -648,7 +648,7 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
             </button>
           </div>
           {amount && (
-            <div className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            <div className="mt-2 text-sm text-muted-foreground">
               ≈ {formatUSD(parseFloat(amount))} {/* This would use real price data */}
             </div>
           )}
@@ -901,28 +901,28 @@ export function LendingForm({ selectedAction, selectedMarket, onClose, onTransac
         )}
 
         {/* Action Info */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-          <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
+        <div className="p-4 bg-secondary rounded-lg">
+          <h4 className="text-sm font-medium text-card-foreground mb-2">
             Transaction Details
           </h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Action:</span>
-              <span className="text-slate-900 dark:text-slate-100 capitalize">{action}</span>
+              <span className="text-muted-foreground">Action:</span>
+              <span className="text-card-foreground capitalize">{action}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Asset:</span>
-              <span className="text-slate-900 dark:text-slate-100">{market.underlyingSymbol}</span>
+              <span className="text-muted-foreground">Asset:</span>
+              <span className="text-card-foreground">{market.underlyingSymbol}</span>
             </div>
             {amount && (
               <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Amount:</span>
-                <span className="text-slate-900 dark:text-slate-100">{amount} {market.underlyingSymbol}</span>
+                <span className="text-muted-foreground">Amount:</span>
+                <span className="text-card-foreground">{amount} {market.underlyingSymbol}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Status:</span>
-              <span className={`text-slate-900 dark:text-slate-100 capitalize ${
+              <span className="text-muted-foreground">Status:</span>
+              <span className={`text-card-foreground capitalize ${
                 transactionStep === 'success' ? 'text-green-600' : 
                 transactionStep === 'error' ? 'text-red-600' : ''
               }`}>

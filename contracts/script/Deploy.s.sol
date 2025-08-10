@@ -16,11 +16,11 @@ contract DeployScript is Script {
         console.log("Deploying with account:", deployer);
         console.log("Account balance:", deployer.balance);
 
-        // 1. Deploy Interest Rate Model with FIXED SAFE PARAMETERS
+        // 1. Deploy Interest Rate Model with ULTRA SAFE PARAMETERS
         InterestRateModel interestModel = new InterestRateModel(
             2e16,    // 2% base rate (unchanged)
-            1e17,    // 10% multiplier (REDUCED from 20%)
-            5e17,    // 50% jump multiplier (REDUCED from 109%)
+            8e16,    // 8% multiplier (FURTHER REDUCED for safety)
+            2e17,    // 20% jump multiplier (SIGNIFICANTLY REDUCED for safety)
             8e17     // 80% kink (unchanged)
         );
         console.log("Interest Rate Model deployed with SAFE parameters:", address(interestModel));

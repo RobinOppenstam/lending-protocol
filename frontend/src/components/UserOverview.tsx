@@ -49,13 +49,13 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
     <div className="space-y-6">
       {/* Header with Refresh Button */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h2 className="text-xl font-semibold text-foreground">
           Your Portfolio
         </h2>
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="flex items-center space-x-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             <span>Refresh</span>
@@ -66,25 +66,25 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Total Portfolio Value */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
               <DollarSign className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Portfolio Value</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <p className="text-sm font-medium text-muted-foreground">Portfolio Value</p>
+              <p className="text-2xl font-bold text-card-foreground">
                 {formatUSD(userPosition.totalSuppliedUSD)}
               </p>
             </div>
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-muted-foreground">
             Net worth in protocol
           </div>
         </div>
 
         {/* LTV Ratio */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center space-x-3 mb-3">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
               ltv > 75 ? 'bg-red-100 dark:bg-red-900/20' :
@@ -98,36 +98,36 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
               }`} />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">LTV Ratio</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <p className="text-sm font-medium text-muted-foreground">LTV Ratio</p>
+              <p className="text-2xl font-bold text-card-foreground">
                 {ltv.toFixed(1)}%
               </p>
             </div>
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-muted-foreground">
             Borrowed / Supplied
           </div>
         </div>
         {/* Available to Borrow */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center space-x-3 mb-3">
             <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
               <TrendingDown className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Available to Borrow</p>
-              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <p className="text-sm font-medium text-muted-foreground">Available to Borrow</p>
+              <p className="text-2xl font-bold text-card-foreground">
                 {formatUSD(availableBorrow)}
               </p>
             </div>
           </div>
-          <div className="text-sm text-slate-500 dark:text-slate-400">
+          <div className="text-sm text-muted-foreground">
             Remaining borrow capacity
           </div>
         </div>
 
         {/* Health Factor */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
@@ -146,8 +146,8 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 }`} />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Health Factor</p>
-                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                <p className="text-sm font-medium text-muted-foreground">Health Factor</p>
+                <p className="text-2xl font-bold text-card-foreground">
                   {userPosition.healthFactor === Infinity ? '∞' : userPosition.healthFactor.toFixed(2)}
                 </p>
               </div>
@@ -163,19 +163,19 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
       </div>
 
       {/* Borrow Limit Progress */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+      <div className="bg-card rounded-xl p-6 card-shadow">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg font-semibold text-card-foreground">
               Borrow Limit
             </h3>
-            <span className="text-sm text-slate-500 dark:text-slate-400">
+            <span className="text-sm text-muted-foreground">
               {formatUSD(userPosition.totalBorrowedUSD)} / {formatUSD(userPosition.borrowLimitUSD)}
             </span>
           </div>
           
           <div className="space-y-2">
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div 
                 className={`h-3 rounded-full transition-all duration-300 ${
                   userPosition.borrowLimitUsed > 90 
@@ -188,11 +188,11 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
               />
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-500 dark:text-slate-400">
+              <span className="text-muted-foreground">
                 {formatPercentage(userPosition.borrowLimitUsed)} used
               </span>
               <span className={`font-medium ${
-                userPosition.borrowLimitUsed > 80 ? 'text-red-600' : 'text-slate-500 dark:text-slate-400'
+                userPosition.borrowLimitUsed > 80 ? 'text-red-600' : 'text-muted-foreground'
               }`}>
                 {formatUSD(userPosition.borrowLimitUSD - userPosition.totalBorrowedUSD)} available
               </span>
@@ -222,18 +222,18 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
       {/* Detailed Asset Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Supply Positions */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg font-semibold text-card-foreground">
               Supply Positions
             </h3>
-            <div className="text-sm text-slate-500 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Total: {formatUSD(userPosition.totalSuppliedUSD)}
             </div>
           </div>
           <div className="space-y-4">
             {assetBreakdown.filter(asset => asset.position.suppliedUSD > 0).map((asset) => (
-              <div key={asset.market} className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+              <div key={asset.market} className="p-4 bg-secondary rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <Image 
@@ -244,12 +244,12 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                       className="rounded-full"
                     />
                     <div>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">{asset.name}</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{asset.symbol}</p>
+                      <p className="font-medium text-card-foreground">{asset.name}</p>
+                      <p className="text-sm text-muted-foreground">{asset.symbol}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">
+                    <p className="font-semibold text-card-foreground">
                       {formatUSD(asset.position.suppliedUSD)}
                     </p>
                     <p className="text-sm text-green-600">
@@ -259,17 +259,17 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 </div>
                 {/* Collateral Info */}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-500 dark:text-slate-400">
+                  <span className="text-muted-foreground">
                     Collateral Factor: {(asset.collateralFactor * 100).toFixed(0)}%
                   </span>
-                  <span className="text-slate-600 dark:text-slate-300">
+                  <span className="text-secondary-foreground">
                     Borrow Power: {formatUSD(asset.position.suppliedUSD * asset.collateralFactor)}
                   </span>
                 </div>
               </div>
             ))}
             {assetBreakdown.filter(asset => asset.position.suppliedUSD > 0).length === 0 && (
-              <div className="text-center py-6 text-slate-500 dark:text-slate-400">
+              <div className="text-center py-6 text-muted-foreground">
                 No supply positions yet
               </div>
             )}
@@ -277,18 +277,18 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
         </div>
 
         {/* Borrow Positions */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+        <div className="bg-card rounded-xl p-6 card-shadow">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg font-semibold text-card-foreground">
               Borrow Positions
             </h3>
-            <div className="text-sm text-slate-500 dark:text-slate-400">
+            <div className="text-sm text-muted-foreground">
               Total: {formatUSD(userPosition.totalBorrowedUSD)}
             </div>
           </div>
           <div className="space-y-4">
             {assetBreakdown.filter(asset => asset.position.borrowedUSD > 0).map((asset) => (
-              <div key={asset.market} className="p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+              <div key={asset.market} className="p-4 bg-secondary rounded-lg">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-3">
                     <Image 
@@ -299,12 +299,12 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                       className="rounded-full"
                     />
                     <div>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">{asset.name}</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{asset.symbol}</p>
+                      <p className="font-medium text-card-foreground">{asset.name}</p>
+                      <p className="text-sm text-muted-foreground">{asset.symbol}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">
+                    <p className="font-semibold text-card-foreground">
                       {formatUSD(asset.position.borrowedUSD)}
                     </p>
                     <p className="text-sm text-red-600">
@@ -313,13 +313,13 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                   </div>
                 </div>
                 {/* Interest Accruing */}
-                <div className="text-sm text-slate-500 dark:text-slate-400">
+                <div className="text-sm text-muted-foreground">
                   Interest accruing at current rate
                 </div>
               </div>
             ))}
             {assetBreakdown.filter(asset => asset.position.borrowedUSD > 0).length === 0 && (
-              <div className="text-center py-6 text-slate-500 dark:text-slate-400">
+              <div className="text-center py-6 text-muted-foreground">
                 No borrow positions yet
               </div>
             )}
@@ -328,15 +328,15 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
       </div>
 
       {/* Enhanced Risk Analysis */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+      <div className="bg-card rounded-xl p-6 card-shadow">
+        <h3 className="text-lg font-semibold text-card-foreground mb-4">
           Risk Analysis
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* LTV Progress */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-sm font-medium text-foreground/80">
                 LTV Ratio
               </span>
               <span className={`text-sm font-semibold ${
@@ -347,7 +347,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 {ltv.toFixed(1)}%
               </span>
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div 
                 className={`h-3 rounded-full transition-all duration-300 ${
                   ltv > 75 ? 'bg-red-500' :
@@ -357,7 +357,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 style={{ width: `${Math.min(ltv, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="text-xs text-muted-foreground">
               {ltv < 60 ? 'Safe' : ltv < 75 ? 'Moderate Risk' : 'High Risk'}
             </div>
           </div>
@@ -365,14 +365,14 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
           {/* Health Factor */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-sm font-medium text-foreground/80">
                 Health Factor
               </span>
               <span className={`text-sm font-semibold ${riskLevel.color.replace('text-', '')}`}>
                 {userPosition.healthFactor === Infinity ? '∞' : userPosition.healthFactor.toFixed(2)}
               </span>
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div 
                 className={`h-3 rounded-full transition-all duration-300 ${
                   userPosition.healthFactor > 2 ? 'bg-green-500' :
@@ -385,7 +385,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 }}
               />
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="text-xs text-muted-foreground">
               {riskLevel.label}
             </div>
           </div>
@@ -393,7 +393,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
           {/* Borrow Limit Usage */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-sm font-medium text-foreground/80">
                 Borrow Limit Used
               </span>
               <span className={`text-sm font-semibold ${
@@ -404,7 +404,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 {formatPercentage(userPosition.borrowLimitUsed)}
               </span>
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div 
                 className={`h-3 rounded-full transition-all duration-300 ${
                   userPosition.borrowLimitUsed > 90 ? 'bg-red-500' :
@@ -414,7 +414,7 @@ export function UserOverview({ userPosition, isLoading, onRefresh }: UserOvervie
                 style={{ width: `${Math.min(userPosition.borrowLimitUsed, 100)}%` }}
               />
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="text-xs text-muted-foreground">
               {formatUSD(availableBorrow)} available
             </div>
           </div>
@@ -430,21 +430,21 @@ function UserOverviewSkeleton() {
     <div className="space-y-6 animate-pulse">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
+          <div key={i} className="bg-card rounded-xl p-6 card-shadow">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-lg loading-skeleton" />
+              <div className="w-10 h-10 bg-secondary rounded-lg loading-skeleton" />
               <div className="space-y-2">
-                <div className="h-4 w-24 bg-slate-200 dark:bg-slate-700 rounded loading-skeleton" />
-                <div className="h-6 w-16 bg-slate-200 dark:bg-slate-700 rounded loading-skeleton" />
+                <div className="h-4 w-24 bg-secondary rounded loading-skeleton" />
+                <div className="h-6 w-16 bg-secondary rounded loading-skeleton" />
               </div>
             </div>
-            <div className="h-4 w-32 bg-slate-200 dark:bg-slate-700 rounded loading-skeleton" />
+            <div className="h-4 w-32 bg-secondary rounded loading-skeleton" />
           </div>
         ))}
       </div>
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 card-shadow">
-        <div className="h-6 w-32 bg-slate-200 dark:bg-slate-700 rounded loading-skeleton mb-4" />
-        <div className="h-3 w-full bg-slate-200 dark:bg-slate-700 rounded loading-skeleton" />
+      <div className="bg-card rounded-xl p-6 card-shadow">
+        <div className="h-6 w-32 bg-secondary rounded loading-skeleton mb-4" />
+        <div className="h-3 w-full bg-secondary rounded loading-skeleton" />
       </div>
     </div>
   );
@@ -453,19 +453,19 @@ function UserOverviewSkeleton() {
 // Empty state
 function EmptyUserOverview() {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-12 card-shadow text-center">
-      <PiggyBank className="w-16 h-16 mx-auto text-slate-400 mb-4" />
-      <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-2">
+    <div className="bg-card rounded-xl p-12 card-shadow text-center">
+      <PiggyBank className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+      <h3 className="text-xl font-semibold text-card-foreground mb-2">
         No positions yet
       </h3>
-      <p className="text-slate-600 dark:text-slate-400 mb-6">
+      <p className="text-muted-foreground mb-6">
         Start by supplying assets to earn interest or borrow against your collateral.
       </p>
       <div className="flex justify-center space-x-4">
         <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
           Supply Assets
         </button>
-        <button className="px-6 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+        <button className="px-6 py-2 border border-border text-foreground/80 rounded-lg hover:bg-accent transition-colors">
           Learn More
         </button>
       </div>

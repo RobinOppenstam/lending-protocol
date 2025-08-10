@@ -1,7 +1,7 @@
 export const contracts = {
-  // ✅ UPDATED WITH NEW DEPLOYED CONTRACT ADDRESSES
+  // ✅ FRESH DEPLOYMENT WITH FIXED PARAMETERS - NO MORE EXCHANGE RATE EXPLOSION!
   comptroller: {
-    address: '0x0b1C31213d3181Fd9b9fd159288F84adB2825e97' as `0x${string}`, // New fixed comptroller
+    address: '0x300068b3EA3d6080065f31d6914c818aFbf69671' as `0x${string}`, // NEW: Fixed deployment with safe parameters
     abi: [
       {
         name: 'accountMembership',
@@ -79,8 +79,8 @@ export const contracts = {
     ] as const,
   },
   
-  priceOracle: {
-    address: '0x313ED33288c24768Db927Cfb7Af0304149f426Ff' as `0x${string}`, // New fixed price oracle
+  chainlinkPriceOracle: {
+    address: '0xdbb126a47D145AcdF08569950E6027f5D55153e1' as `0x${string}`, // NEW: ChainlinkPriceOracleV2 with real live prices
     abi: [
       {
         name: 'getUnderlyingPrice',
@@ -90,29 +90,110 @@ export const contracts = {
         outputs: [{ name: '', type: 'uint256' }]
       },
       {
-        name: 'prices',
+        name: 'getPriceWithMetadata',
         type: 'function',
         stateMutability: 'view',
-        inputs: [{ name: '', type: 'address' }],
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: [
+          { name: 'price', type: 'uint256' },
+          { name: 'updatedAt', type: 'uint256' },
+          { name: 'isStale', type: 'bool' }
+        ]
+      },
+      {
+        name: 'checkPriceFeedHealth',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: [
+          { name: 'healthy', type: 'bool' },
+          { name: 'reason', type: 'string' }
+        ]
+      },
+      {
+        name: 'getBatchPrices',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lTokens', type: 'address[]' }],
+        outputs: [{ name: 'prices', type: 'uint256[]' }]
+      },
+      {
+        name: 'useEmergencyPrice',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'emergencyPrices',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lToken', type: 'address' }],
         outputs: [{ name: '', type: 'uint256' }]
       },
       {
-        name: 'setPrice',
+        name: 'MIN_PRICE',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'MAX_PRICE',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'MAX_PRICE_AGE',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getMaxPriceAge',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'assetTypes',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: [{ name: '', type: 'uint8' }]
+      },
+      {
+        name: 'DEFAULT_MAX_PRICE_AGE',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'STABLECOIN_MAX_PRICE_AGE',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'resumePriceFeed',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'lToken', type: 'address' }],
+        outputs: []
+      },
+      {
+        name: 'pausePriceFeed',
         type: 'function',
         stateMutability: 'nonpayable',
         inputs: [
           { name: 'lToken', type: 'address' },
-          { name: 'price', type: 'uint256' }
-        ],
-        outputs: []
-      },
-      {
-        name: 'setPrices',
-        type: 'function',
-        stateMutability: 'nonpayable',
-        inputs: [
-          { name: 'lTokens', type: 'address[]' },
-          { name: 'prices', type: 'uint256[]' }
+          { name: 'emergencyPrice', type: 'uint256' }
         ],
         outputs: []
       }
@@ -120,7 +201,7 @@ export const contracts = {
   },
   
   lUSDC: {
-    address: '0xbAc6bF46B37490ac71f31735E9dA3752c5664036' as `0x${string}`, // New fixed lUSDC token
+    address: '0x2035a1Ad5542388108aa3ec0EA4cc995422252F6' as `0x${string}`, // NEW: Fresh lUSDC with normal exchange rate
     abi: [
       {
         name: 'supply',
@@ -210,7 +291,7 @@ export const contracts = {
   },
   
   lETH: {
-    address: '0xFAf79f14f3418d61516a25CE61AF4e4b737CF7B8' as `0x${string}`, // New fixed lETH token
+    address: '0xd6d3BfA05F1c24Ad1f8056328341c6BBE598Bc2a' as `0x${string}`, // NEW: Fresh lETH with normal exchange rate
     abi: [
       {
         name: 'supply',
@@ -448,6 +529,517 @@ export const contracts = {
       }
     ] as const,
   },
+  
+  wbtc: {
+    address: '0x29f2D40B0605204364af54EC677bD022dA425d03' as `0x${string}`, // Sepolia WBTC
+    abi: [
+      {
+        name: 'balanceOf',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'owner', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'allowance',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' }
+        ],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'approve',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'spender', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transfer',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transferFrom',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'decimals',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint8' }]
+      },
+      {
+        name: 'symbol',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      },
+      {
+        name: 'name',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      }
+    ] as const,
+  },
+  
+  link: {
+    address: '0xf8Fb3713D459D7C1018BD0A49D19b4C44290EBE5' as `0x${string}`, // Sepolia LINK
+    abi: [
+      {
+        name: 'balanceOf',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'owner', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'allowance',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' }
+        ],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'approve',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'spender', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transfer',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transferFrom',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'decimals',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint8' }]
+      },
+      {
+        name: 'symbol',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      },
+      {
+        name: 'name',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      }
+    ] as const,
+  },
+  
+  usdt: {
+    address: '0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0' as `0x${string}`, // Sepolia USDT
+    abi: [
+      {
+        name: 'balanceOf',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'owner', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'allowance',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [
+          { name: 'owner', type: 'address' },
+          { name: 'spender', type: 'address' }
+        ],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'approve',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'spender', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transfer',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'transferFrom',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [
+          { name: 'from', type: 'address' },
+          { name: 'to', type: 'address' },
+          { name: 'amount', type: 'uint256' }
+        ],
+        outputs: [{ name: '', type: 'bool' }]
+      },
+      {
+        name: 'decimals',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint8' }]
+      },
+      {
+        name: 'symbol',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      },
+      {
+        name: 'name',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'string' }]
+      }
+    ] as const,
+  },
+  
+  lWBTC: {
+    address: '0x11245Da0D7A2b69f661d715CB20a11A41140ae8F' as `0x${string}`, // NEW: Wrapped Bitcoin lToken
+    abi: [
+      {
+        name: 'supply',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'supplyAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'redeem',
+        type: 'function', 
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'redeemTokens', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrow',
+        type: 'function',
+        stateMutability: 'nonpayable', 
+        inputs: [{ name: 'borrowAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'repayBorrow',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'repayAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'exchangeRateStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getSupplyRate',
+        type: 'function',
+        stateMutability: 'view', 
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getBorrowRate',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getCash',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalSupply',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalBorrows',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'accountTokens',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrowBalanceStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      }
+    ] as const,
+  },
+  
+  lLINK: {
+    address: '0x02266A9d79Aa697780cC87E95dFcC87c83f7a560' as `0x${string}`, // NEW: Chainlink lToken
+    abi: [
+      {
+        name: 'supply',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'supplyAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'redeem',
+        type: 'function', 
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'redeemTokens', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrow',
+        type: 'function',
+        stateMutability: 'nonpayable', 
+        inputs: [{ name: 'borrowAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'repayBorrow',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'repayAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'exchangeRateStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getSupplyRate',
+        type: 'function',
+        stateMutability: 'view', 
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getBorrowRate',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getCash',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalSupply',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalBorrows',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'accountTokens',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrowBalanceStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      }
+    ] as const,
+  },
+  
+  lUSDT: {
+    address: '0x7B03e675C406c8fDC75Ea5c252acA6EdecdB1CAF' as `0x${string}`, // NEW: Tether lToken
+    abi: [
+      {
+        name: 'supply',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'supplyAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'redeem',
+        type: 'function', 
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'redeemTokens', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrow',
+        type: 'function',
+        stateMutability: 'nonpayable', 
+        inputs: [{ name: 'borrowAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'repayBorrow',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ name: 'repayAmount', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'exchangeRateStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getSupplyRate',
+        type: 'function',
+        stateMutability: 'view', 
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getBorrowRate',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'getCash',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalSupply',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'totalBorrows',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'accountTokens',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      },
+      {
+        name: 'borrowBalanceStored',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      }
+    ] as const,
+  },
+} as const;
+
+// Contract addresses for easy access
+export const addresses = {
+  comptroller: contracts.comptroller.address,
+  priceOracle: contracts.chainlinkPriceOracle.address,
+  lUSDC: contracts.lUSDC.address,
+  lETH: contracts.lETH.address,
+  lWBTC: contracts.lWBTC.address,
+  lLINK: contracts.lLINK.address,
+  lUSDT: contracts.lUSDT.address,
+  usdc: contracts.usdc.address,
+  weth: contracts.weth.address,
+  wbtc: contracts.wbtc.address,
+  link: contracts.link.address,
+  usdt: contracts.usdt.address,
 } as const;
 
 // Market configuration - Updated for new deployment
@@ -473,6 +1065,39 @@ export const markets = [
     icon: '/Eth_logo.png',
     collateralFactor: 0.75, // 75% - Fixed deployment
     liquidationThreshold: 0.82, // 82%
+  },
+  {
+    symbol: 'lWBTC',
+    name: 'Wrapped Bitcoin',
+    lTokenAddress: contracts.lWBTC.address,
+    underlyingAddress: contracts.wbtc.address,
+    underlyingSymbol: 'WBTC',
+    decimals: 8,
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',
+    collateralFactor: 0.7, // 70% - Conservative for volatile asset
+    liquidationThreshold: 0.75, // 75%
+  },
+  {
+    symbol: 'lLINK',
+    name: 'Chainlink',
+    lTokenAddress: contracts.lLINK.address,
+    underlyingAddress: contracts.link.address,
+    underlyingSymbol: 'LINK',
+    decimals: 18,
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png',
+    collateralFactor: 0.65, // 65% - Oracle token, moderate risk
+    liquidationThreshold: 0.72, // 72%
+  },
+  {
+    symbol: 'lUSDT',
+    name: 'Tether USD',
+    lTokenAddress: contracts.lUSDT.address,
+    underlyingAddress: contracts.usdt.address,
+    underlyingSymbol: 'USDT',
+    decimals: 6,
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png',
+    collateralFactor: 0.8, // 80% - Stablecoin like USDC
+    liquidationThreshold: 0.85, // 85%
   },
 ] as const;
 

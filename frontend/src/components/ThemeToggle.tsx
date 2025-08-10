@@ -15,7 +15,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
+        className="relative p-2 rounded-lg bg-secondary hover:bg-accent transition-colors"
         aria-label="Toggle theme"
       >
         <div className="relative w-5 h-5">
@@ -34,7 +34,7 @@ function ThemeToggleClient() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
+      className="relative p-2 rounded-lg bg-secondary hover:bg-accent transition-colors"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       <div className="relative w-5 h-5">
@@ -49,7 +49,7 @@ function ThemeToggleClient() {
         
         {/* Moon Icon */}
         <Moon 
-          className={`absolute inset-0 w-5 h-5 text-slate-700 dark:text-slate-300 transition-all duration-300 ${
+          className={`absolute inset-0 w-5 h-5 text-secondary-foreground transition-all duration-300 ${
             theme === 'dark' 
               ? 'opacity-100 rotate-0 scale-100' 
               : 'opacity-0 -rotate-90 scale-75'
@@ -71,7 +71,7 @@ export function ThemeToggleSwitch() {
   if (!mounted) {
     return (
       <button
-        className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="relative inline-flex h-6 w-11 items-center rounded-full bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         aria-label="Toggle theme"
       >
         <span className="inline-block h-4 w-4 transform rounded-full bg-white translate-x-1">
@@ -96,7 +96,7 @@ function ThemeToggleSwitchClient() {
       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
         isDark 
           ? 'bg-blue-600' 
-          : 'bg-slate-200 dark:bg-slate-700'
+          : 'bg-secondary'
       }`}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >

@@ -2,13 +2,15 @@
 import { useAccount, useReadContracts } from 'wagmi';
 import { contracts, markets } from '@/config/contracts';
 import { UserPosition, UseUserPositionReturn } from '@/types/defi';
-import { calculateAPY } from '@/lib/utils';
+import { calculateAPY, calculateHealthFactor } from '@/lib/utils';
+import { useOraclePrices } from './useOraclePrices';
 
 // Store previous data for comparison
 let previousPositionData: any = null;
 
 export function useUserPosition(): UseUserPositionReturn {
   const { address } = useAccount();
+  const { prices: oraclePrices } = useOraclePrices();
 
   const { data, isLoading, error, refetch } = useReadContracts({
     contracts: [
@@ -76,19 +78,39 @@ export function useUserPosition(): UseUserPositionReturn {
     },
   });
 
-  // Debug logging
+  // Debug logging with detailed contract call analysis
   console.log('useUserPosition debug:', {
     address,
     hasData: !!data,
     dataLength: data?.length,
     isLoading,
     error,
-    contractResults: data?.map((result, index) => ({
-      index,
-      status: result.status,
-      error: result.error,
-      result: result.status === 'success' ? 'success' : 'failed'
-    }))
+    contractResults: data?.map((result, index) => {
+      const callNames = [
+        'comptroller.getAccountLiquidity',
+        'lUSDC.accountTokens', 
+        'lUSDC.borrowBalanceStored',
+        'lETH.accountTokens',
+        'lETH.borrowBalanceStored', 
+        'lUSDC.exchangeRateStored',
+        'lETH.exchangeRateStored',
+        'lUSDC.getSupplyRate',
+        'lUSDC.getBorrowRate',
+        'lETH.getSupplyRate', 
+        'lETH.getBorrowRate'
+      ];
+      return {
+        index,
+        callName: callNames[index] || `call_${index}`,
+        status: result.status,
+        error: result.error?.message || null,
+        hasResult: result.status === 'success' && result.result !== undefined,
+        resultPreview: result.status === 'success' ? 
+          (typeof result.result === 'bigint' ? result.result.toString().slice(0, 20) + '...' : 
+           Array.isArray(result.result) ? `[${result.result.length} items]` : 
+           String(result.result).slice(0, 20) + '...') : 'failed'
+      };
+    })
   });
 
   const userPosition: UserPosition | undefined = data && address ? (() => {
@@ -108,53 +130,179 @@ export function useUserPosition(): UseUserPositionReturn {
     const ethSupplyRate = data[9]?.status === 'success' ? data[9].result as bigint : BigInt(0);
     const ethBorrowRate = data[10]?.status === 'success' ? data[10].result as bigint : BigInt(0);
     
-    // Log extreme interest rates that could cause the explosion
-    if (usdcBorrowRate > BigInt(1e18)) { // More than 100% per block
-      console.error('🚨 EXTREME BORROW RATE DETECTED:', {
+    // Log all interest rates to debug the issue
+    console.log('🔍 RAW INTEREST RATES DEBUG:', {
+      rates: {
+        usdcSupplyRate: usdcSupplyRate.toString(),
         usdcBorrowRate: usdcBorrowRate.toString(),
-        usdcBorrowRateFormatted: `${Number(usdcBorrowRate) / 1e18 * 100}% per block`,
-        annualizedRate: `${Number(usdcBorrowRate) / 1e18 * 2628000 * 100}% per year`,
-        thisWillCauseExplosion: true
-      });
-    }
+        ethSupplyRate: ethSupplyRate.toString(),
+        ethBorrowRate: ethBorrowRate.toString(),
+      },
+      formatted: {
+        usdcSupplyRatePerBlock: `${Number(usdcSupplyRate) / 1e18}`,
+        usdcBorrowRatePerBlock: `${Number(usdcBorrowRate) / 1e18}`,
+        ethSupplyRatePerBlock: `${Number(ethSupplyRate) / 1e18}`,
+        ethBorrowRatePerBlock: `${Number(ethBorrowRate) / 1e18}`,
+      },
+      annualized: {
+        usdcSupplyAPY: `${Number(usdcSupplyRate) / 1e18 * 2628000 * 100}%`,
+        usdcBorrowAPY: `${Number(usdcBorrowRate) / 1e18 * 2628000 * 100}%`,
+        ethSupplyAPY: `${Number(ethSupplyRate) / 1e18 * 2628000 * 100}%`,
+        ethBorrowAPY: `${Number(ethBorrowRate) / 1e18 * 2628000 * 100}%`,
+      },
+      warning: Number(usdcBorrowRate) > 1e18 || Number(ethBorrowRate) > 1e18 ? '⚠️ EXTREME RATES DETECTED' : 'Rates look normal'
+    });
     
-    // Calculate APY values
+    // Calculate APY values with detailed USDC debugging
+    console.log('🔍 USDC SPECIFIC DEBUG:', {
+      usdcSupplyRate: {
+        raw: usdcSupplyRate.toString(),
+        decimal: Number(usdcSupplyRate) / 1e18,
+        isZero: usdcSupplyRate === BigInt(0),
+      },
+      usdcBorrowRate: {
+        raw: usdcBorrowRate.toString(),
+        decimal: Number(usdcBorrowRate) / 1e18,
+        isZero: usdcBorrowRate === BigInt(0),
+      }
+    });
+
     const usdcSupplyAPY = calculateAPY({ ratePerBlock: usdcSupplyRate });
     const usdcBorrowAPY = calculateAPY({ ratePerBlock: usdcBorrowRate });
     const ethSupplyAPY = calculateAPY({ ratePerBlock: ethSupplyRate });
     const ethBorrowAPY = calculateAPY({ ratePerBlock: ethBorrowRate });
     
-    // Calculate underlying amounts - using new fixed contracts
+    console.log('🔍 CALCULATED APYs:', {
+      usdcSupplyAPY,
+      usdcBorrowAPY,
+      ethSupplyAPY,
+      ethBorrowAPY,
+      usdcIssue: usdcSupplyAPY > 100 || usdcBorrowAPY > 100 ? 'USDC APY too high' : 'USDC APY looks OK'
+    });
+    
+    // Debug exchange rates and balances
+    console.log('🔍 EXCHANGE RATES & BALANCES DEBUG:', {
+      rawBalances: {
+        lUSDCBalance: lUSDCBalance.toString(),
+        lETHBalance: lETHBalance.toString(),
+        usdcBorrowBalance: usdcBorrowBalance.toString(),
+        ethBorrowBalance: ethBorrowBalance.toString(),
+      },
+      exchangeRates: {
+        usdcExchangeRate: usdcExchangeRate.toString(),
+        ethExchangeRate: ethExchangeRate.toString(),
+        usdcExchangeRateFormatted: Number(usdcExchangeRate) / 1e18,
+        ethExchangeRateFormatted: Number(ethExchangeRate) / 1e18,
+      }
+    });
+
+    // Calculate underlying amounts - exchange rates should be correct now
     const usdcSupplied = (lUSDCBalance * usdcExchangeRate) / BigInt(1e18);
     const ethSupplied = (lETHBalance * ethExchangeRate) / BigInt(1e18);
     
-    // Use fallback prices (should be fetched from oracle in production)
-    const usdcPrice = 1; // $1 for USDC
-    const ethPrice = 2000; // $2000 for ETH (should come from oracle)
+    console.log('🔍 CALCULATED UNDERLYING AMOUNTS:', {
+      usdcSupplied: usdcSupplied.toString(),
+      ethSupplied: ethSupplied.toString(),
+      usdcSuppliedFormatted: Number(usdcSupplied) / 1e6, // USDC has 6 decimals
+      ethSuppliedFormatted: Number(ethSupplied) / 1e18, // ETH has 18 decimals
+    });
     
-    // Calculate USD values
+    // Get real prices from oracle with fallbacks
+    const usdcPrice = oraclePrices?.lUSDCPrice ? Number(oraclePrices.lUSDCPrice) / 1e18 : 1;
+    const ethPrice = oraclePrices?.lETHPrice ? Number(oraclePrices.lETHPrice) / 1e18 : 4212;
+
+    // Detailed USDC value calculation debug
+    const usdcSuppliedFormatted = Number(usdcSupplied) / 1e6;
+    console.log('🔍 USDC VALUE CALCULATION BREAKDOWN:', {
+      step1_lTokenBalance: {
+        raw: lUSDCBalance.toString(),
+        formatted: Number(lUSDCBalance) / 1e18, // lTokens have 18 decimals
+      },
+      step2_exchangeRate: {
+        raw: usdcExchangeRate.toString(),
+        formatted: Number(usdcExchangeRate) / 1e18,
+        meaning: 'How many underlying tokens per lToken'
+      },
+      step3_underlyingCalculation: {
+        formula: 'lTokenBalance * exchangeRate / 1e18',
+        calculation: `${lUSDCBalance.toString()} * ${usdcExchangeRate.toString()} / 1e18`,
+        result: usdcSupplied.toString(),
+        resultFormatted: usdcSuppliedFormatted + ' USDC'
+      },
+      step4_priceConversion: {
+        usdcPrice,
+        formula: 'underlyingAmount * price',
+        calculation: `${usdcSuppliedFormatted} * ${usdcPrice}`,
+        finalUSD: usdcSuppliedFormatted * usdcPrice
+      },
+      possibleIssues: {
+        exchangeRateTooHigh: Number(usdcExchangeRate) / 1e18 > 3,
+        lTokenBalanceTooHigh: Number(lUSDCBalance) / 1e18 > 10000,
+        priceWrong: usdcPrice < 0.99 || usdcPrice > 1.01,
+        underlyingTooHigh: usdcSuppliedFormatted > 100000
+      }
+    });
+    
+    // Debug exchange rates - should be reasonable now  
+    console.log('🔍 EXCHANGE RATE VALUES:', {
+      usdc: {
+        raw: usdcExchangeRate.toString(),
+        formatted: Number(usdcExchangeRate) / 1e18,
+        reasonable: Number(usdcExchangeRate) / 1e18 >= 1.0 && Number(usdcExchangeRate) / 1e18 <= 5.0
+      },
+      eth: {
+        raw: ethExchangeRate.toString(),
+        formatted: Number(ethExchangeRate) / 1e18,
+        reasonable: Number(ethExchangeRate) / 1e18 >= 1.0 && Number(ethExchangeRate) / 1e18 <= 5.0
+      }
+    });
+    
+    // Calculate USD values using actual smart contract values
     const usdcSuppliedUSD = Number(usdcSupplied) / 1e6 * usdcPrice; // USDC has 6 decimals
     const ethSuppliedUSD = Number(ethSupplied) / 1e18 * ethPrice; // ETH has 18 decimals
     const usdcBorrowedUSD = Number(usdcBorrowBalance) / 1e6 * usdcPrice;
     const ethBorrowedUSD = Number(ethBorrowBalance) / 1e18 * ethPrice;
     
+    console.log('🔍 USD VALUES DEBUG:', {
+      usdcSuppliedUSD,
+      ethSuppliedUSD,
+      usdcBorrowedUSD,
+      ethBorrowedUSD,
+      totalSupplied: usdcSuppliedUSD + ethSuppliedUSD,
+      totalBorrowed: usdcBorrowedUSD + ethBorrowedUSD,
+      prices: { usdcPrice, ethPrice }
+    });
+    
     const totalSuppliedUSD = usdcSuppliedUSD + ethSuppliedUSD;
     const totalBorrowedUSD = usdcBorrowedUSD + ethBorrowedUSD;
     
-    // accountLiquidity[0] is remaining available to borrow, not total limit
-    const comptrollerBorrowCapacityUSD = Number(accountLiquidity[0]) / 1e18;
+    // Check if account has shortfall (underwater position)
+    const shortfallETH = Number(accountLiquidity[1]) / 1e18;
     
-    // Calculate expected borrow power manually for comparison
-    const expectedUSDCBorrowPower = usdcSuppliedUSD * 0.8; // 80% collateral factor
-    const expectedETHBorrowPower = ethSuppliedUSD * 0.75; // 75% collateral factor
-    const expectedTotalBorrowPower = expectedUSDCBorrowPower + expectedETHBorrowPower;
-    const expectedAvailableToBorrow = expectedTotalBorrowPower - totalBorrowedUSD;
+    // Calculate total borrow limit based on collateral factors (this is the correct approach)
+    const usdcBorrowPower = usdcSuppliedUSD * 0.8; // 80% collateral factor
+    const ethBorrowPower = ethSuppliedUSD * 0.75; // 75% collateral factor
+    const totalBorrowPower = usdcBorrowPower + ethBorrowPower;
     
-    // Use expected calculation if comptroller seems wrong (temporary fix)
-    const remainingBorrowCapacityUSD = Math.max(comptrollerBorrowCapacityUSD, expectedAvailableToBorrow);
-    const borrowLimitUSD = totalBorrowedUSD + remainingBorrowCapacityUSD;
-    const borrowLimitUsed = borrowLimitUSD > 0 ? (totalBorrowedUSD / borrowLimitUSD) * 100 : 0;
-    const healthFactor = totalBorrowedUSD > 0 ? (totalSuppliedUSD * 0.85) / totalBorrowedUSD : Infinity;
+    // If there's a shortfall, the borrow limit is just the current borrows (maxed out)
+    // Otherwise, the borrow limit is the total borrow power based on collateral
+    const effectiveBorrowLimitUSD = shortfallETH > 0 ? totalBorrowedUSD : totalBorrowPower;
+    
+    console.log('🎯 CORRECTED BORROW LIMIT CALCULATION:', {
+      usdcSupplied: usdcSuppliedUSD,
+      usdcBorrowPower: `$${usdcBorrowPower.toFixed(2)} (80% of $${usdcSuppliedUSD.toFixed(2)})`,
+      ethSupplied: ethSuppliedUSD,
+      ethBorrowPower: `$${ethBorrowPower.toFixed(2)} (75% of $${ethSuppliedUSD.toFixed(2)})`,
+      totalBorrowLimit: `$${totalBorrowPower.toFixed(2)}`,
+      currentBorrowed: `$${totalBorrowedUSD.toFixed(2)}`,
+      availableToBorrow: `$${Math.max(0, totalBorrowPower - totalBorrowedUSD).toFixed(2)}`,
+      hasShortfall: shortfallETH > 0,
+      effectiveBorrowLimit: `$${effectiveBorrowLimitUSD.toFixed(2)}`
+    });
+    
+    // Calculate utilization percentage
+    const borrowLimitUsed = effectiveBorrowLimitUSD > 0 ? Math.min((totalBorrowedUSD / effectiveBorrowLimitUSD) * 100, 100) : 0;
+    const healthFactor = calculateHealthFactor(totalSuppliedUSD, totalBorrowedUSD, 0.85);
 
     // Compare with previous data to detect changes
     const currentData = {
@@ -257,23 +405,16 @@ export function useUserPosition(): UseUserPositionReturn {
       comptrollerData: {
         accountLiquidity: accountLiquidity.map(x => x.toString()),
         liquidityInETH: `${Number(accountLiquidity[0]) / 1e18} ETH-equivalent`,
-        comptrollerBorrowCapacityUSD,
-        remainingBorrowCapacityUSD,
-        borrowLimitUSD,
+        borrowLimitUSD: effectiveBorrowLimitUSD,
         borrowLimitUsed: `${borrowLimitUsed.toFixed(1)}%`,
+        shortfall: shortfallETH > 0 ? `$${(shortfallETH * ethPrice).toFixed(2)}` : '$0',
       },
-      expectedCalculations: {
-        expectedUSDCBorrowPower: `$${expectedUSDCBorrowPower.toFixed(2)}`,
-        expectedETHBorrowPower: `$${expectedETHBorrowPower.toFixed(2)}`,
-        expectedTotalBorrowPower: `$${expectedTotalBorrowPower.toFixed(2)}`,
-        expectedAvailableToBorrow: `$${expectedAvailableToBorrow.toFixed(2)}`,
-      },
-      issue: {
-        comptrollerReturns: `$${comptrollerBorrowCapacityUSD.toFixed(2)}`,
-        shouldReturn: `$${expectedAvailableToBorrow.toFixed(2)}`,
-        usingValue: `$${remainingBorrowCapacityUSD.toFixed(2)}`,
-        difference: `$${(expectedAvailableToBorrow - comptrollerBorrowCapacityUSD).toFixed(2)}`,
-        possibleCause: 'getAccountLiquidity might be using different prices or collateral factors'
+      borrowPowerAnalysis: {
+        usdcBorrowPower: `$${usdcBorrowPower.toFixed(2)}`,
+        ethBorrowPower: `$${ethBorrowPower.toFixed(2)}`,
+        totalBorrowPower: `$${totalBorrowPower.toFixed(2)}`,
+        availableToBorrow: `$${Math.max(0, totalBorrowPower - totalBorrowedUSD).toFixed(2)}`,
+        calculationMethod: 'Using collateral factors instead of comptroller liquidity',
       }
     });
     
@@ -281,7 +422,7 @@ export function useUserPosition(): UseUserPositionReturn {
       totalSuppliedUSD,
       totalBorrowedUSD,
       totalCollateralUSD: totalSuppliedUSD,
-      borrowLimitUSD,
+      borrowLimitUSD: effectiveBorrowLimitUSD,
       borrowLimitUsed,
       liquidationThreshold: 0.85,
       healthFactor,

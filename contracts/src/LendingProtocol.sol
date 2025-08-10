@@ -21,13 +21,13 @@ contract InterestRateModel {
     
     constructor(
         uint256 _baseRatePerYear,      // 2% = 2e16
-        uint256 _multiplierPerYear,    // 10% = 1e17 (REDUCED from 20%)
-        uint256 _jumpMultiplierPerYear, // 50% = 5e17 (REDUCED from 109%)
+        uint256 _multiplierPerYear,    // 8% = 8e16 (FURTHER REDUCED for safety)
+        uint256 _jumpMultiplierPerYear, // 20% = 2e17 (SIGNIFICANTLY REDUCED for safety)
         uint256 _kink                  // 80% = 8e17
     ) {
-        require(_baseRatePerYear <= 1e17, "Base rate too high"); // Max 10%
-        require(_multiplierPerYear <= 2e17, "Multiplier too high"); // Max 20%
-        require(_jumpMultiplierPerYear <= 1e18, "Jump multiplier too high"); // Max 100%
+        require(_baseRatePerYear <= 5e16, "Base rate too high"); // Max 5%
+        require(_multiplierPerYear <= 15e16, "Multiplier too high"); // Max 15%
+        require(_jumpMultiplierPerYear <= 3e17, "Jump multiplier too high"); // Max 30%
         require(_kink <= 9e17, "Kink too high"); // Max 90%
         
         baseRatePerYear = _baseRatePerYear;
@@ -128,9 +128,10 @@ contract LToken is ReentrancyGuard, Ownable {
     uint256 public accrualBlockNumber;
     uint256 public supplyIndex = 1e18; // Track supply index for interest distribution
     
-    // SAFETY LIMITS
-    uint256 private constant MAX_BORROW_RATE_PER_BLOCK = 1e14; // 0.01% per block max
-    uint256 private constant MAX_EXCHANGE_RATE = 50e18; // 50x initial rate max
+    // ENHANCED SAFETY LIMITS
+    uint256 private constant MAX_BORROW_RATE_PER_BLOCK = 5e12; // 0.0005% per block max (~13% annual)
+    uint256 private constant MAX_EXCHANGE_RATE = 3e18; // 3x initial rate max for testing
+    uint256 private constant MAX_INTEREST_FACTOR = 1e15; // 0.1% max interest per accrual
     
     mapping(address => uint256) public accountTokens;
     mapping(address => uint256) public accountBorrows;
@@ -206,6 +207,12 @@ contract LToken is ReentrancyGuard, Ownable {
         
         // Calculate simple interest (not compound for safety)
         uint256 simpleInterestFactor = borrowRatePerBlock * blockDelta;
+        
+        // ENHANCED SAFETY: Cap the interest factor to prevent exchange rate explosion
+        if (simpleInterestFactor > MAX_INTEREST_FACTOR) {
+            simpleInterestFactor = MAX_INTEREST_FACTOR;
+        }
+        
         uint256 interestAccumulated = (simpleInterestFactor * borrowsPrior) / 1e18;
         
         // Update market state

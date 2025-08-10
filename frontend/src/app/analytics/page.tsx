@@ -8,6 +8,8 @@ import { useAccount } from 'wagmi';
 import { BarChart3, TrendingUp, PieChart, Activity, DollarSign, Shield } from 'lucide-react';
 import { formatUSD, formatPercentage } from '@/lib/utils';
 import Image from 'next/image';
+import { ChainlinkOracleStatus } from '@/components/ChainlinkOracleStatus';
+import { ChainlinkOracleAdmin } from '@/components/ChainlinkOracleAdmin';
 
 export default function AnalyticsPage() {
   const { isConnected } = useAccount();
@@ -267,6 +269,14 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Chainlink Oracle Status */}
+          <ChainlinkOracleStatus />
+
+          {/* Oracle Admin Panel (for authorized users) */}
+          {isConnected && (
+            <ChainlinkOracleAdmin />
           )}
 
           {/* Protocol Statistics */}

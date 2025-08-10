@@ -8,7 +8,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['assets.coingecko.com', 'raw.githubusercontent.com'],
+    domains: ['assets.coingecko.com', 'raw.githubusercontent.com', 's2.coinmarketcap.com'],
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],

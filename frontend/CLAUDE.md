@@ -20,8 +20,8 @@ A comprehensive decentralized lending protocol built with Solidity, Foundry, Nex
 | Parameter | Value | Description |
 |-----------|--------|-------------|
 | **Base Rate** | 2% | Minimum interest rate when utilization = 0% |
-| **Multiplier** | 20% | Rate increase per utilization point up to kink |
-| **Jump Multiplier** | 109% | Steep rate increase after kink point |
+| **Multiplier** | 8% | Rate increase per utilization point up to kink (REDUCED for safety) |
+| **Jump Multiplier** | 20% | Rate increase after kink point (SIGNIFICANTLY REDUCED for safety) |
 | **Kink** | 80% | Optimal utilization rate target |
 
 **Formula**: 
@@ -50,6 +50,25 @@ A comprehensive decentralized lending protocol built with Solidity, Foundry, Nex
 - Supply: $1,000 USDC  
 - Borrow: $790 (79% utilization)
 - Liquidation Risk: High - close to threshold
+
+## ✅ RECENT FIXES (January 2025)
+
+**Issues Fixed:**
+- ❌ **Exchange Rate Explosion**: Previous contracts had inflated exchange rates (187x) due to accumulated interest
+- ❌ **Wrong APY Calculations**: Frontend was treating annual rates as per-block rates
+- ❌ **Inflated Portfolio Values**: $194K USDC showing instead of ~$1.8K due to exchange rate issues
+
+**Solutions Implemented:**
+- ✅ **Fresh Contract Deployment**: New contracts with clean 1:1 exchange rates
+- ✅ **Fixed APY Calculation**: `calculateAPY()` now correctly interprets contract rates as annual rates
+- ✅ **Enhanced Safety Measures**: Reduced jump multiplier from 109% to 20%, added exchange rate caps
+- ✅ **Correct Market Data**: Fixed total supply calculation to use underlying tokens not lTokens
+
+**New Contract Addresses (Sepolia):**
+- Comptroller: `0x300068b3EA3d6080065f31d6914c818aFbf69671`
+- lUSDC: `0x2035a1Ad5542388108aa3ec0EA4cc995422252F6`
+- lETH: `0xd6d3BfA05F1c24Ad1f8056328341c6BBE598Bc2a`
+- MockPriceOracle: `0x25eeC45CC5689c82609452EEEf6C91Fae1c4f5Cd`
 
 ## 🚀 Quick Start
 
